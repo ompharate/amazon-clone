@@ -39,7 +39,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
     service: "gmail",
     auth: {
       user: "ompharate31@gmail.com",
-      pass: "wkkjjprzkqxtboju",
+      pass: "pharate@9529617531",
     },
   });
 
@@ -95,7 +95,7 @@ app.post("/register", async (req, res) => {
     });
   } catch (error) {
     console.log("Error during registration:", error); // Debugging statement
-    res.status(500).json({ message: "Registration failed" });
+    res.status(500).json({ message: "Registration failed" ,error:error});
   }
 });
 
