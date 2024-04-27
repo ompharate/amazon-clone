@@ -32,33 +32,7 @@ mongoose
 const User = require("./models/user");
 const Order = require("./models/order");
 
-const sendVerificationEmail = async (email, verificationToken) => {
-  // Create a Nodemailer transporter
-  const transporter = nodemailer.createTransport({
-    // Configure the email service or SMTP details here
-    service: "gmail",
-    auth: {
-      user: "ompharate31@gmail.com",
-      pass: "pharate@9529617531",
-    },
-  });
 
-  // Compose the email message
-  const mailOptions = {
-    from: "amazon.com",
-    to: email,
-    subject: "Email Verification",
-    text: `Please click the following link to verify your email: http://localhost:8000/verify/${verificationToken}`,
-  };
-
-  // Send the email
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("Verification email sent successfully");
-  } catch (error) {
-    console.error("Error sending verification email:", error);
-  }
-};
 // Register a new user
 // ... existing imports and setup ...
 
@@ -85,9 +59,7 @@ app.post("/register", async (req, res) => {
     // Debugging statement to verify data
     console.log("New User Registered:", newUser);
 
-    // Send verification email to the user
-    // Use your preferred email service or library to send the email
-    sendVerificationEmail(newUser.email, newUser.verificationToken);
+   
 
     res.status(201).json({
       message:
@@ -99,28 +71,6 @@ app.post("/register", async (req, res) => {
   }
 });
 
-//endpoint to verify the email
-app.get("/verify/:token", async (req, res) => {
-  try {
-    const token = req.params.token;
-
-    //Find the user witht the given verification token
-    const user = await User.findOne({ verificationToken: token });
-    if (!user) {
-      return res.status(404).json({ message: "Invalid verification token" });
-    }
-
-    //Mark the user as verified
-    user.verified = true;
-    user.verificationToken = undefined;
-
-    await user.save();
-
-    res.status(200).json({ message: "Email verified successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Email Verificatioion Failed" });
-  }
-});
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
