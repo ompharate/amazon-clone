@@ -42,10 +42,15 @@ app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      console.log("Email already registered:", email); // Debugging statement
-      return res.status(400).json({ message: "Email already registered" });
+    try {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        console.log("Email already registered:", email); // Debugging statement
+        return res.status(400).json({ message: "Email already registered" });
+      }
+    } catch (error) {
+      console.log("Error checking for existing user:", error);
+      res.status(500).json({ message: "Registration failed" });
     }
 
     const newUser = new User({ name, email, password });
@@ -59,7 +64,7 @@ app.post("/register", async (req, res) => {
         "Registration successful. Please check your email for verification.",
     });
   } catch (error) {
-    console.log("Error during registration:", error); 
+    console.log("Error during registration:", error);
     res.status(500).json({ message: "Registration failed", error: error });
   }
 });
