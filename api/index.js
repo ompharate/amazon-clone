@@ -18,10 +18,13 @@ app.listen(port, () => {
 });
 
 mongoose
-  .connect("mongodb+srv://om:pharate11@cluster0.nnceu.mongodb.net/amazon?retryWrites=true&w=majority/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://om:pharate11@cluster0.nnceu.mongodb.net/amazon?retryWrites=true&w=majority/",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -31,7 +34,6 @@ mongoose
 
 const User = require("./models/user");
 const Order = require("./models/order");
-
 
 // Register a new user
 // ... existing imports and setup ...
@@ -50,16 +52,12 @@ app.post("/register", async (req, res) => {
     // Create a new user
     const newUser = new User({ name, email, password });
 
-    // Generate and store the verification token
-    newUser.verificationToken = crypto.randomBytes(20).toString("hex");
-
+  
     // Save the user to the database
     await newUser.save();
 
     // Debugging statement to verify data
     console.log("New User Registered:", newUser);
-
-   
 
     res.status(201).json({
       message:
@@ -67,10 +65,9 @@ app.post("/register", async (req, res) => {
     });
   } catch (error) {
     console.log("Error during registration:", error); // Debugging statement
-    res.status(500).json({ message: "Registration failed" ,error:error});
+    res.status(500).json({ message: "Registration failed", error: error });
   }
 });
-
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
@@ -199,18 +196,18 @@ app.get("/profile/:userId", async (req, res) => {
   }
 });
 
-app.get("/orders/:userId",async(req,res) => {
-  try{
+app.get("/orders/:userId", async (req, res) => {
+  try {
     const userId = req.params.userId;
 
-    const orders = await Order.find({user:userId}).populate("user");
+    const orders = await Order.find({ user: userId }).populate("user");
 
-    if(!orders || orders.length === 0){
-      return res.status(404).json({message:"No orders found for this user"})
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "No orders found for this user" });
     }
 
     res.status(200).json({ orders });
-  } catch(error){
-    res.status(500).json({ message: "Error"});
+  } catch (error) {
+    res.status(500).json({ message: "Error" });
   }
-})
+});
