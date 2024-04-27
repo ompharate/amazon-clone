@@ -42,21 +42,16 @@ app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if the email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log("Email already registered:", email); // Debugging statement
       return res.status(400).json({ message: "Email already registered" });
     }
 
-    // Create a new user
     const newUser = new User({ name, email, password });
 
-  
-    // Save the user to the database
     await newUser.save();
 
-    // Debugging statement to verify data
     console.log("New User Registered:", newUser);
 
     res.status(201).json({
@@ -64,7 +59,7 @@ app.post("/register", async (req, res) => {
         "Registration successful. Please check your email for verification.",
     });
   } catch (error) {
-    console.log("Error during registration:", error); // Debugging statement
+    console.log("Error during registration:", error); 
     res.status(500).json({ message: "Registration failed", error: error });
   }
 });
@@ -138,7 +133,7 @@ app.get("/addresses/:userId", async (req, res) => {
     const addresses = user.addresses;
     res.status(200).json({ addresses });
   } catch (error) {
-    res.status(500).json({ message: "Error retrieveing the addresses" });
+    res.status(500).json({ message: "Error retrieving the addresses" });
   }
 });
 

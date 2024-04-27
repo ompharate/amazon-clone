@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  verificationToken: String,
+ 
   addresses: [
     {
       name: String,
